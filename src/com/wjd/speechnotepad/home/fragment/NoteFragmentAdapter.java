@@ -11,13 +11,14 @@ public class NoteFragmentAdapter extends FragmentPagerAdapter
 
 	private int count = 0;
 
-	private String[] titles = new String[] { "Notes", "Create" };
+	private String[] titles = null;
 
-	public NoteFragmentAdapter(FragmentManager fm, int count)
+	public NoteFragmentAdapter(FragmentManager fm, int count, String[] titles)
 	{
 		super(fm);
 		fragments = new Fragment[count];
 		this.count = count;
+		this.titles = titles;
 	}
 
 	@Override
@@ -36,6 +37,10 @@ public class NoteFragmentAdapter extends FragmentPagerAdapter
 			{
 				fragments[1] = CreateFragment.newInstance();
 				return fragments[1];
+			} else if (position == 2)
+			{
+				fragments[2] = CreateFragment.newInstance();
+				return fragments[2];
 			}
 			return null;
 		}

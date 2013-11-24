@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 
 import com.wjd.speechnotepad.R;
 
-public class CreateFragment extends BaseFragment
+public class CalendarFragment extends BaseFragment
 {
 
-	public static CreateFragment newInstance()
+	public static CalendarFragment newInstance()
 	{
-		return new CreateFragment();
+		return new CalendarFragment();
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class CreateFragment extends BaseFragment
 			Bundle savedInstanceState)
 	{
 		View view = LayoutInflater.from(getActivity().getBaseContext())
-				.inflate(R.layout.speechnotepad_create_fragment_layout, null);
+				.inflate(R.layout.speechnotepad_calendar_fragment_layout, null);
 		return view;
 	}
 }
