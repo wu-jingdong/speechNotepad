@@ -1,10 +1,14 @@
 package com.wjd.speechnotepad;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
+import android.os.Bundle;
 
-public class MainActivity extends Activity
+import com.wjd.speechnotepad.handler.DeliveredEntity;
+import com.wjd.speechnotepad.handler.MainHandler;
+import com.wjd.speechnotepad.handler.PostListener;
+import com.wjd.speechnotepad.home.HomeActivity;
+
+public class MainActivity extends Activity implements PostListener
 {
 
 	@Override
@@ -12,14 +16,23 @@ public class MainActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		MainHandler.instance().registListener(this.hashCode(), this,
+				MainActivity.class.getName());
+		MainHandler.instance().sendEmptyMessageDelayed(
+				MainHandler.getIntKey(MainActivity.class.getName()), 3000);
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	public void onPostListener(DeliveredEntity postEntity)
 	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		HomeActivity.actionLuanch(this);
+		finish();
 	}
 
+	@Override
+	protected void onDestroy()
+	{
+		MainHandler.instance().unRegistListener(this.hashCode());
+		super.onDestroy();
+	}
 }
