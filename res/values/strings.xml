@@ -2,10 +2,18 @@
 <resources>
 
     <string name="app_name">语音记事本</string>
+    <string name="day_week_01">日</string>
+    <string name="day_week_02">一</string>
+    <string name="day_week_03">二</string>
+    <string name="day_week_04">三</string>
+    <string name="day_week_05">四</string>
+    <string name="day_week_06">五</string>
+    <string name="day_week_07">六</string>
+
     <string-array name="tab_titles">
-        <item >记事列表</item>
-        <item >日历</item>
-        <item >新增记事</item>
+        <item>记事列表</item>
+        <item>日历</item>
+        <item>新增记事</item>
     </string-array>
 
 </resources>

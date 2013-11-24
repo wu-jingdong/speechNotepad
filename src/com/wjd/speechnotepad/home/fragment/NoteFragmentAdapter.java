@@ -35,7 +35,7 @@ public class NoteFragmentAdapter extends FragmentPagerAdapter
 				return fragments[0];
 			} else if (position == 1)
 			{
-				fragments[1] = CreateFragment.newInstance();
+				fragments[1] = CalendarFragment.newInstance();
 				return fragments[1];
 			} else if (position == 2)
 			{

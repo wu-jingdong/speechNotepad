@@ -3,6 +3,6 @@
 
     <color name="lst_cache_color">#00000000</color>
     <color name="bg_color">#ff979797</color>
-    <color name="fg_color">#ffc7c7c7</color>
+    <color name="fg_color">#ffeeeeee</color>
 
 </resources>

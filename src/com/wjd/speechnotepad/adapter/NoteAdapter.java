@@ -33,7 +33,7 @@ public class NoteAdapter extends BaseAdapter
 	@Override
 	public NotepadEntity getItem(int position)
 	{
-		return null;
+		return notes.get(position);
 	}
 
 	@Override
