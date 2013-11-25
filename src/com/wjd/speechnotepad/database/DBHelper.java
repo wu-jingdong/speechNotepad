@@ -25,10 +25,11 @@ public class DBHelper extends SQLiteOpenHelper
 				NotepadDbWrapper.TABLE_NAME));
 		db.execSQL(String.format("create table notepad "
 				+ "(%s text primary key not null, %s text not null, "
-				+ "%s text, %s text)", NotepadDbWrapper.NOTE_ID,
-				NotepadDbWrapper.NOTE_AUDIO_ROUTE,
+				+ "%s text, %s text, %s integer not null)",
+				NotepadDbWrapper.NOTE_ID, NotepadDbWrapper.NOTE_AUDIO_ROUTE,
 				NotepadDbWrapper.NOTE_PHOTO_ROUTE,
-				NotepadDbWrapper.NOTE_NOTICE_TIME));
+				NotepadDbWrapper.NOTE_NOTICE_TIME,
+				NotepadDbWrapper.NOTE_DURATION));
 	}
 
 	@Override

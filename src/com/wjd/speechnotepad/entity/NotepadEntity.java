@@ -11,6 +11,8 @@ public class NotepadEntity
 
 	private String noticeTime;
 
+	private int duration;
+
 	public String getId()
 	{
 		return id;
@@ -49,6 +51,16 @@ public class NotepadEntity
 	public void setNoticeTime(String noticeTime)
 	{
 		this.noticeTime = noticeTime;
+	}
+
+	public int getDuration()
+	{
+		return duration;
+	}
+
+	public void setDuration(int duration)
+	{
+		this.duration = duration;
 	}
 
 }

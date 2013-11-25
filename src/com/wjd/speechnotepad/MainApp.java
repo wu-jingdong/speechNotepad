@@ -19,6 +19,11 @@ public class MainApp extends Application
 				DBHelper.DB_VERSION).getWritableDatabase();
 	}
 
+	public SQLiteDatabase db()
+	{
+		return db;
+	}
+
 	public void recycle()
 	{
 		if (null != db)

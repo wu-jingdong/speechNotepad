@@ -7,6 +7,7 @@ import com.wjd.speechnotepad.handler.DeliveredEntity;
 import com.wjd.speechnotepad.handler.MainHandler;
 import com.wjd.speechnotepad.handler.PostListener;
 import com.wjd.speechnotepad.home.HomeActivity;
+import com.wjd.speechnotepad.util.FileUtil;
 
 public class MainActivity extends Activity implements PostListener
 {
@@ -20,6 +21,7 @@ public class MainActivity extends Activity implements PostListener
 				MainActivity.class.getName());
 		MainHandler.instance().sendEmptyMessageDelayed(
 				MainHandler.getIntKey(MainActivity.class.getName()), 3000);
+		FileUtil.newInstance().initDir(getBaseContext());
 	}
 
 	@Override

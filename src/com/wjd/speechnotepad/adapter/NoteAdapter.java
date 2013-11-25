@@ -3,10 +3,13 @@ package com.wjd.speechnotepad.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.wjd.speechnotepad.R;
 import com.wjd.speechnotepad.entity.NotepadEntity;
@@ -27,7 +30,7 @@ public class NoteAdapter extends BaseAdapter
 	@Override
 	public int getCount()
 	{
-		return 50;
+		return notes.size();
 	}
 
 	@Override
@@ -45,12 +48,35 @@ public class NoteAdapter extends BaseAdapter
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
+		ViewHolder holder = null;
 		if (null == convertView)
 		{
 			convertView = LayoutInflater.from(context).inflate(
 					R.layout.speechnotepad_notes_listitem_layout, null);
+			holder = new ViewHolder();
+			holder.btnAudio = (Button) convertView.findViewById(R.id.btn_audio);
+			holder.btnClock = (Button) convertView
+					.findViewById(R.id.ibtn_clock);
+			holder.tvTime = (TextView) convertView.findViewById(R.id.tv_time);
+			convertView.setTag(holder);
+		} else
+		{
+			holder = (ViewHolder) convertView.getTag();
 		}
+		holder.btnAudio.setText(getItem(position).getDuration() + "\'");
+		holder.btnClock.setVisibility(TextUtils.isEmpty(getItem(position)
+				.getNoticeTime()) ? View.GONE : View.VISIBLE);
+		holder.tvTime.setText(getItem(position).getId());
 		return convertView;
+	}
+
+	class ViewHolder
+	{
+		Button btnAudio;
+
+		Button btnClock;
+
+		TextView tvTime;
 	}
 
 }

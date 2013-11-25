@@ -21,6 +21,8 @@ public class NotepadDbWrapper
 
 	public static final String NOTE_PHOTO_ROUTE = "note_photo_route";
 
+	public static final String NOTE_DURATION = "note_duration";
+
 	public static void getNotes(List<NotepadEntity> notes, SQLiteDatabase db)
 	{
 		Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null,
@@ -38,6 +40,7 @@ public class NotepadDbWrapper
 				note.setAudioRoute(cursor.getString(1));
 				note.setPhotoRoute(cursor.getString(2));
 				note.setNoticeTime(cursor.getString(3));
+				note.setDuration(cursor.getInt(4));
 				notes.add(note);
 			} while (cursor.moveToNext());
 		}
@@ -58,6 +61,7 @@ public class NotepadDbWrapper
 		values.put(NOTE_AUDIO_ROUTE, entity.getAudioRoute());
 		values.put(NOTE_PHOTO_ROUTE, entity.getPhotoRoute());
 		values.put(NOTE_NOTICE_TIME, entity.getNoticeTime());
+		values.put(NOTE_DURATION, entity.getDuration());
 		db.insert(TABLE_NAME, null, values);
 	}
 
@@ -72,6 +76,7 @@ public class NotepadDbWrapper
 			values.put(NOTE_AUDIO_ROUTE, entity.getAudioRoute());
 			values.put(NOTE_PHOTO_ROUTE, entity.getPhotoRoute());
 			values.put(NOTE_NOTICE_TIME, entity.getNoticeTime());
+			values.put(NOTE_DURATION, entity.getDuration());
 			db.insert(TABLE_NAME, null, values);
 			values.clear();
 		}
@@ -86,6 +91,7 @@ public class NotepadDbWrapper
 		values.put(NOTE_AUDIO_ROUTE, note.getAudioRoute());
 		values.put(NOTE_PHOTO_ROUTE, note.getPhotoRoute());
 		values.put(NOTE_NOTICE_TIME, note.getNoticeTime());
+		values.put(NOTE_DURATION, note.getDuration());
 		db.update(TABLE_NAME, values, String.format("%s = ?", NOTE_ID),
 				new String[] { note.getId() });
 	}

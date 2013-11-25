@@ -8,13 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.wjd.speechnotepad.R;
 import com.wjd.speechnotepad.adapter.NoteAdapter;
+import com.wjd.speechnotepad.database.NotepadDbWrapper;
 import com.wjd.speechnotepad.entity.NotepadEntity;
+import com.wjd.speechnotepad.util.Loger;
 
 public class NotesFragment extends BaseFragment
 {
@@ -31,6 +32,13 @@ public class NotesFragment extends BaseFragment
 	private NoteAdapter adapter = null;
 
 	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		NotepadDbWrapper.getNotes(notes, getApp().db());
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
 	{
@@ -43,13 +51,20 @@ public class NotesFragment extends BaseFragment
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
-				Toast.makeText(getActivity().getBaseContext(),
-						"Position " + position, Toast.LENGTH_SHORT).show();
+
 			}
 		});
 		adapter = new NoteAdapter(getActivity().getBaseContext(), notes);
 		lstNotes.setAdapter(adapter);
 		return view;
+	}
+
+	@Override
+	public void onDestroyView()
+	{
+		Loger.print(this.getClass().getName(),
+				"onDestroyView ================ ", Loger.INFO);
+		super.onDestroyView();
 	}
 
 	@Override
