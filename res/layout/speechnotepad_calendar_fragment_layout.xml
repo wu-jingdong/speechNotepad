@@ -8,7 +8,8 @@
     <TableRow
         android:id="@+id/tableRow2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_bar_background" >
 
         <Button
             android:id="@+id/btn_last_month"

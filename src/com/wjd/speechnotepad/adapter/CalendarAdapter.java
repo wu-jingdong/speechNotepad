@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wjd.speechnotepad.R;
@@ -83,6 +84,8 @@ public class CalendarAdapter extends BaseAdapter
 			vh.tvDayOfMonth = (TextView) convertView
 					.findViewById(R.id.tv_day_of_month);
 			vh.tvLeft = (TextView) convertView.findViewById(R.id.tv_left);
+			vh.imgIndicator = (ImageView) convertView
+					.findViewById(R.id.img_indicator);
 			convertView.setTag(vh);
 		} else
 		{
@@ -131,5 +134,7 @@ public class CalendarAdapter extends BaseAdapter
 		TextView tvDayOfMonth;
 
 		TextView tvLeft;
+
+		ImageView imgIndicator;
 	}
 }

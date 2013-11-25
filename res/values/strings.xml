@@ -15,6 +15,10 @@
         <item>日历</item>
         <item>新增记事</item>
     </string-array>
-    <string name="today">今天</string>
+    <string name="today">今天</string>
+    <string name="press_to_speak">长按录制记事本内容</string>
+    <string name="record_short">您录制的时间过短，请重新录制！</string>
+    <string name="save">保存记事</string>
+    <string name="add_clock">添加提醒</string>
 
 </resources>
