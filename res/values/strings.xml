@@ -15,5 +15,6 @@
         <item>日历</item>
         <item>新增记事</item>
     </string-array>
+    <string name="today">今天</string>
 
 </resources>

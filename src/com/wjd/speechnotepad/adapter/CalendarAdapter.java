@@ -8,6 +8,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -22,6 +23,8 @@ public class CalendarAdapter extends BaseAdapter
 	private Context context = null;
 
 	private int curmonth = 0;
+
+	private int itemHeight = 0;
 
 	public CalendarAdapter(Context context, List<CalendarEntity> cls,
 			long curTime)
@@ -62,6 +65,12 @@ public class CalendarAdapter extends BaseAdapter
 		notifyDataSetChanged();
 	}
 
+	public void notify(int totalHeight)
+	{
+		itemHeight = totalHeight * 7 / cls.size();
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
@@ -73,6 +82,7 @@ public class CalendarAdapter extends BaseAdapter
 			vh = new ViewHolder();
 			vh.tvDayOfMonth = (TextView) convertView
 					.findViewById(R.id.tv_day_of_month);
+			vh.tvLeft = (TextView) convertView.findViewById(R.id.tv_left);
 			convertView.setTag(vh);
 		} else
 		{
@@ -88,11 +98,38 @@ public class CalendarAdapter extends BaseAdapter
 			vh.tvDayOfMonth.setTextColor(context.getResources().getColor(
 					android.R.color.darker_gray));
 		}
+
+		if (getItem(position).isToday())
+		{
+			convertView.setBackgroundResource(R.color.bg_calendar_today);
+		} else
+		{
+			convertView.setBackgroundResource(android.R.color.transparent);
+		}
+
+		LayoutParams params = (LayoutParams) convertView.getLayoutParams();
+		if (null == params)
+		{
+			params = new LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT);
+		}
+		if (itemHeight > 0)
+		{
+			params.height = itemHeight;
+		}
+		convertView.setLayoutParams(params);
+		vh.tvLeft.setVisibility(View.GONE);
+		if (position % 7 == 0)
+		{
+			vh.tvLeft.setVisibility(View.VISIBLE);
+		}
 		return convertView;
 	}
 
 	class ViewHolder
 	{
 		TextView tvDayOfMonth;
+
+		TextView tvLeft;
 	}
 }

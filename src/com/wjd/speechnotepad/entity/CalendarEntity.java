@@ -50,4 +50,19 @@ public class CalendarEntity
 		cal.setTimeInMillis(timestamp);
 		return cal.get(Calendar.DAY_OF_WEEK);
 	}
+
+	public boolean isToday()
+	{
+		long curTime = System.currentTimeMillis();
+		long dayTime = 24 * 36000 * 1000;
+		if (Math.abs(curTime - timestamp) <= dayTime)
+		{
+			if (Calendar.getInstance(Locale.getDefault()).get(
+					Calendar.DAY_OF_MONTH) == getDay())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

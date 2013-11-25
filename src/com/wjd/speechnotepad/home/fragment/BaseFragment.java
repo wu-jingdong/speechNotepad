@@ -11,4 +11,16 @@ public class BaseFragment extends Fragment
 	{
 		return (MainApp) getActivity().getApplication();
 	}
+
+	@SuppressWarnings("deprecation")
+	protected int getScreenWidth()
+	{
+		return getActivity().getWindowManager().getDefaultDisplay().getWidth();
+	}
+
+	protected int dp2px(int dip)
+	{
+		float scale = getActivity().getResources().getDisplayMetrics().density;
+		return (int) (dip * scale + 0.5f * (dip >= 0 ? 1 : -1));
+	}
 }
