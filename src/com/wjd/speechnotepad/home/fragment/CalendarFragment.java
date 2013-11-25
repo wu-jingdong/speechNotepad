@@ -76,7 +76,7 @@ public class CalendarFragment extends BaseFragment implements OnClickListener
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		cal.setTimeInMillis(curTime);
 		int curDay = cal.get(Calendar.DAY_OF_MONTH);
-		int weeks = cal.get(Calendar.WEEK_OF_MONTH);
+		int weeks = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
 		// 第一天的time
 		long firstDayTime = curTime - dayTime * (curDay - 1);
 		cal.setTimeInMillis(firstDayTime);
