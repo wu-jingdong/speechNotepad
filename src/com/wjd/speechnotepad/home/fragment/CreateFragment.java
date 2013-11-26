@@ -23,6 +23,7 @@ import com.wjd.speechnotepad.handler.MainHandler;
 import com.wjd.speechnotepad.handler.PostListener;
 import com.wjd.speechnotepad.util.AudioMsgUtil;
 import com.wjd.speechnotepad.util.FileUtil;
+import com.wjd.speechnotepad.widget.TimerView;
 
 public class CreateFragment extends BaseFragment implements OnClickListener,
 		OnTouchListener, PostListener
@@ -36,6 +37,8 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 	private Button btnAddClock;
 
 	private LinearLayout lineTime;
+
+	private TimerView timerView;
 
 	private TextView tvTime;
 
@@ -55,6 +58,7 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		btnAddClock.setOnClickListener(this);
 		lineTime = (LinearLayout) view.findViewById(R.id.line_time);
 		lineTime.setVisibility(View.GONE);
+		timerView = (TimerView) view.findViewById(R.id.timer_view);
 		tvTime = (TextView) view.findViewById(R.id.tv_time);
 		btnPress2Speack = (Button) view.findViewById(R.id.btn_press_2_speak);
 		btnPress2Speack.setOnTouchListener(this);
@@ -88,11 +92,16 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 
 	private void doSave()
 	{
+		if (TextUtils.isEmpty(confirmPath))
+		{
+			return;
+		}
 		NotepadEntity entity = new NotepadEntity();
 		entity.setId(String.valueOf(System.currentTimeMillis()));
-		entity.setAudioRoute(tempAudioRecPath);
-		entity.setDuration(getRecDuration());
+		entity.setAudioRoute(confirmPath);
+		entity.setDuration(confirmTime);
 		NotepadDbWrapper.insertNote(entity, getApp().db());
+		getParent().setCurPage(0);
 	}
 
 	private void doPlay()
@@ -137,6 +146,8 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 			recPlay.release();
 			recPlay = null;
 		}
+		MainHandler.instance().removeMessages(
+				MainHandler.getIntKey(getClass().getName()));
 		audioRecupView();
 		if (endRecTime - beginRecTime < 1000)
 		{
@@ -149,6 +160,8 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 
 	protected void handleRecEnd()
 	{
+		confirmPath = tempAudioRecPath;
+		confirmTime = getRecDuration();
 		btnAudio.setVisibility(View.VISIBLE);
 		btnAudio.setText(getRecDuration() + "\'");
 	}
@@ -174,6 +187,10 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 
 	protected String tempAudioRecPath = null;
 
+	private String confirmPath = null;
+
+	private int confirmTime = 0;
+
 	private File initFile()
 	{
 		tempAudioRecPath = FileUtil.append(System.currentTimeMillis()
@@ -188,10 +205,8 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		int time = (int) getRecTime();
 		tvTime.setText(String.format("%02d:%02d:%02d", time / 3600, time / 60,
 				time % 60));
-		if (lineTime.getVisibility() != View.VISIBLE)
-		{
-			return;
-		}
+		timerView.invalidate(time);
+
 		MainHandler.instance().sendEmptyMessageDelayed(
 				MainHandler.getIntKey(getClass().getName()), 1000);
 	}
@@ -213,6 +228,8 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 
 	protected void audioRecdownView()
 	{
+		tvTime.setText("00:00:00");
+		timerView.invalidate(0);
 		lineTime.setVisibility(View.VISIBLE);
 	};
 
@@ -220,5 +237,11 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 	public void onPostListener(DeliveredEntity postEntity)
 	{
 		updateTime();
+	}
+
+	@Override
+	public void updateView()
+	{
+
 	}
 }

@@ -1,8 +1,6 @@
 package com.wjd.speechnotepad.adapter;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,6 +13,7 @@ import android.widget.TextView;
 
 import com.wjd.speechnotepad.R;
 import com.wjd.speechnotepad.entity.CalendarEntity;
+import com.wjd.speechnotepad.util.DateUtil;
 
 public class CalendarAdapter extends BaseAdapter
 {
@@ -32,14 +31,7 @@ public class CalendarAdapter extends BaseAdapter
 	{
 		this.context = context;
 		this.cls = cls;
-		initCurMonth(curTime);
-	}
-
-	private void initCurMonth(long time)
-	{
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.setTimeInMillis(time);
-		this.curmonth = cal.get(Calendar.MONTH) + 1;
+		this.curmonth = DateUtil.getMonth(curTime);
 	}
 
 	@Override
@@ -62,7 +54,7 @@ public class CalendarAdapter extends BaseAdapter
 
 	public void notify(long curTime)
 	{
-		initCurMonth(curTime);
+		this.curmonth = DateUtil.getMonth(curTime);
 		notifyDataSetChanged();
 	}
 

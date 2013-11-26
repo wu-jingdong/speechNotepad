@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.wjd.speechnotepad.R;
 import com.wjd.speechnotepad.entity.NotepadEntity;
+import com.wjd.speechnotepad.util.DateUtil;
 
 public class NoteAdapter extends BaseAdapter
 {
@@ -66,7 +67,11 @@ public class NoteAdapter extends BaseAdapter
 		holder.btnAudio.setText(getItem(position).getDuration() + "\'");
 		holder.btnClock.setVisibility(TextUtils.isEmpty(getItem(position)
 				.getNoticeTime()) ? View.GONE : View.VISIBLE);
-		holder.tvTime.setText(getItem(position).getId());
+		long time = Long.parseLong(getItem(position).getId());
+		holder.tvTime.setText(DateUtil
+				.format(getItem(position).getId(),
+						DateUtil.isToday(time) ? DateUtil.FMT_HMS
+								: DateUtil.FMT_YMDHMS));
 		return convertView;
 	}
 

@@ -21,6 +21,7 @@ import com.wjd.speechnotepad.entity.CalendarEntity;
 import com.wjd.speechnotepad.handler.DeliveredEntity;
 import com.wjd.speechnotepad.handler.MainHandler;
 import com.wjd.speechnotepad.handler.PostListener;
+import com.wjd.speechnotepad.util.DateUtil;
 
 public class CalendarFragment extends BaseFragment implements OnClickListener,
 		PostListener
@@ -116,22 +117,22 @@ public class CalendarFragment extends BaseFragment implements OnClickListener,
 
 	private String getCurMonthStr()
 	{
-		return String.format(Locale.getDefault(), "%d年%d月", getYear(curTime),
-				getMonth(curTime));
+		return String.format(Locale.getDefault(), "%d年%d月",
+				DateUtil.getYear(curTime), DateUtil.getMonth(curTime));
 	}
 
 	private String getLastMonthStr()
 	{
 		long lastMonthTime = getLastMonthTime();
 		return String.format(Locale.getDefault(), "%d月",
-				getMonth(lastMonthTime));
+				DateUtil.getMonth(lastMonthTime));
 	}
 
 	private String getNextMonthStr()
 	{
 		long nextMonthTime = getNextMonthTime();
 		return String.format(Locale.getDefault(), "%d月",
-				getMonth(nextMonthTime));
+				DateUtil.getMonth(nextMonthTime));
 	}
 
 	private long getLastMonthTime()
@@ -151,21 +152,8 @@ public class CalendarFragment extends BaseFragment implements OnClickListener,
 		return curTime + dayTime * (count - curDay + 1);
 	}
 
-	private int getMonth(long time)
-	{
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.setTimeInMillis(time);
-		return cal.get(Calendar.MONTH) + 1;
-	}
-
-	private int getYear(long time)
-	{
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.setTimeInMillis(time);
-		return cal.get(Calendar.YEAR);
-	}
-
-	private void updateView()
+	@Override
+	public void updateView()
 	{
 		setTitleBar();
 		initCalendar();

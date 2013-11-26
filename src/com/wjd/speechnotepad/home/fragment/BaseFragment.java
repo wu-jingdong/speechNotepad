@@ -1,10 +1,11 @@
 package com.wjd.speechnotepad.home.fragment;
 
 import com.wjd.speechnotepad.MainApp;
+import com.wjd.speechnotepad.home.HomeActivity;
 
 import android.support.v4.app.Fragment;
 
-public class BaseFragment extends Fragment
+public abstract class BaseFragment extends Fragment
 {
 
 	protected MainApp getApp()
@@ -23,4 +24,11 @@ public class BaseFragment extends Fragment
 		float scale = getActivity().getResources().getDisplayMetrics().density;
 		return (int) (dip * scale + 0.5f * (dip >= 0 ? 1 : -1));
 	}
+
+	protected HomeActivity getParent()
+	{
+		return (HomeActivity) getActivity();
+	}
+
+	public abstract void updateView();
 }

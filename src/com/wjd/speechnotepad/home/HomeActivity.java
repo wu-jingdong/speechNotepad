@@ -50,4 +50,10 @@ public class HomeActivity extends FragmentActivity
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+
+	public void setCurPage(int idx)
+	{
+		page.setCurrentItem(idx);
+		adapter.getItem(idx).updateView();
+	}
 }

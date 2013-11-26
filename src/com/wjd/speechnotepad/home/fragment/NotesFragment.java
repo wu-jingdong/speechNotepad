@@ -15,7 +15,6 @@ import com.wjd.speechnotepad.R;
 import com.wjd.speechnotepad.adapter.NoteAdapter;
 import com.wjd.speechnotepad.database.NotepadDbWrapper;
 import com.wjd.speechnotepad.entity.NotepadEntity;
-import com.wjd.speechnotepad.util.Loger;
 
 public class NotesFragment extends BaseFragment
 {
@@ -60,11 +59,11 @@ public class NotesFragment extends BaseFragment
 	}
 
 	@Override
-	public void onDestroyView()
+	public void updateView()
 	{
-		Loger.print(this.getClass().getName(),
-				"onDestroyView ================ ", Loger.INFO);
-		super.onDestroyView();
+		notes.clear();
+		NotepadDbWrapper.getNotes(notes, getApp().db());
+		adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -73,5 +72,4 @@ public class NotesFragment extends BaseFragment
 		notes.clear();
 		super.onDestroy();
 	}
-
 }

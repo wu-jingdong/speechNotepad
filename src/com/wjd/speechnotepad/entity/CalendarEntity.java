@@ -1,7 +1,6 @@
 package com.wjd.speechnotepad.entity;
 
-import java.util.Calendar;
-import java.util.Locale;
+import com.wjd.speechnotepad.util.DateUtil;
 
 public class CalendarEntity
 {
@@ -30,39 +29,18 @@ public class CalendarEntity
 		this.noteCount = noteCount;
 	}
 
-	public int getDay()
-	{
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.setTimeInMillis(timestamp);
-		return cal.get(Calendar.DAY_OF_MONTH);
-	}
-
 	public int getMonth()
 	{
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.setTimeInMillis(timestamp);
-		return cal.get(Calendar.MONTH) + 1;
+		return DateUtil.getDay(timestamp);
 	}
 
-	public int getDayOfWeek()
+	public int getDay()
 	{
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.setTimeInMillis(timestamp);
-		return cal.get(Calendar.DAY_OF_WEEK);
+		return DateUtil.getDay(timestamp);
 	}
 
 	public boolean isToday()
 	{
-		long curTime = System.currentTimeMillis();
-		long dayTime = 24 * 36000 * 1000;
-		if (Math.abs(curTime - timestamp) <= dayTime)
-		{
-			if (Calendar.getInstance(Locale.getDefault()).get(
-					Calendar.DAY_OF_MONTH) == getDay())
-			{
-				return true;
-			}
-		}
-		return false;
+		return DateUtil.isToday(timestamp);
 	}
 }

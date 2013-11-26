@@ -10,7 +10,8 @@
         android:layout_height="match_parent"
         android:cacheColorHint="@color/lst_cache_color"
         android:divider="@drawable/ic_gray_point"
-        android:dividerHeight="1px" >
+        android:dividerHeight="1px"
+        android:listSelector="@drawable/trans_background" >
     </ListView>
 
 </FrameLayout>

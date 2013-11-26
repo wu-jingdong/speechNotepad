@@ -1,13 +1,12 @@
 package com.wjd.speechnotepad.home.fragment;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 public class NoteFragmentAdapter extends FragmentPagerAdapter
 {
 
-	private Fragment[] fragments;
+	private BaseFragment[] fragments;
 
 	private int count = 0;
 
@@ -16,13 +15,13 @@ public class NoteFragmentAdapter extends FragmentPagerAdapter
 	public NoteFragmentAdapter(FragmentManager fm, int count, String[] titles)
 	{
 		super(fm);
-		fragments = new Fragment[count];
+		fragments = new BaseFragment[count];
 		this.count = count;
 		this.titles = titles;
 	}
 
 	@Override
-	public Fragment getItem(int position)
+	public BaseFragment getItem(int position)
 	{
 		if (null != fragments[position])
 		{
