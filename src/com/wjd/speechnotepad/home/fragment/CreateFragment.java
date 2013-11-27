@@ -3,6 +3,7 @@ package com.wjd.speechnotepad.home.fragment;
 import java.io.File;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,13 +22,19 @@ import com.wjd.speechnotepad.entity.NotepadEntity;
 import com.wjd.speechnotepad.handler.DeliveredEntity;
 import com.wjd.speechnotepad.handler.MainHandler;
 import com.wjd.speechnotepad.handler.PostListener;
+import com.wjd.speechnotepad.home.clock.ClockActivity;
 import com.wjd.speechnotepad.util.AudioMsgUtil;
+import com.wjd.speechnotepad.util.DateUtil;
 import com.wjd.speechnotepad.util.FileUtil;
 import com.wjd.speechnotepad.widget.TimerView;
 
 public class CreateFragment extends BaseFragment implements OnClickListener,
 		OnTouchListener, PostListener
 {
+
+	public static final int INNER_UPDATE_TIME = 1;
+
+	public static final int INNER_PICK_TIME = 2;
 
 	public static CreateFragment newInstance()
 	{
@@ -48,6 +55,8 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 
 	private Button btnSave;
 
+	private TextView tvClock;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
@@ -65,8 +74,9 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		btnSave = (Button) view.findViewById(R.id.btn_save);
 		btnSave.setOnClickListener(this);
 		btnAudio = (Button) view.findViewById(R.id.btn_audio);
-		btnAudio.setVisibility(View.GONE);
+		btnAudio.setVisibility(View.INVISIBLE);
 		btnAudio.setOnClickListener(this);
+		tvClock = (TextView) view.findViewById(R.id.tv_clock);
 		MainHandler.instance().registListener(hashCode(), this,
 				getClass().getName());
 		return view;
@@ -78,6 +88,7 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		switch (v.getId())
 		{
 			case R.id.btn_add_clock:
+				doAddClock();
 				break;
 			case R.id.btn_save:
 				doSave();
@@ -90,6 +101,11 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		}
 	}
 
+	private void doAddClock()
+	{
+		ClockActivity.actionLuanch(getActivity());
+	}
+
 	private void doSave()
 	{
 		if (TextUtils.isEmpty(confirmPath))
@@ -100,6 +116,10 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		entity.setId(String.valueOf(System.currentTimeMillis()));
 		entity.setAudioRoute(confirmPath);
 		entity.setDuration(confirmTime);
+		if (clock > System.currentTimeMillis() + 60000)
+		{
+			entity.setNoticeTime(String.valueOf(clock));
+		}
 		NotepadDbWrapper.insertNote(entity, getApp().db());
 		getParent().setCurPage(0);
 	}
@@ -129,8 +149,7 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
 			audioRecDown();
-			MainHandler.instance().sendEmptyMessageDelayed(
-					MainHandler.getIntKey(getClass().getName()), 1000);
+			sendUpdateTimeMessage();
 		} else if (event.getAction() == MotionEvent.ACTION_UP)
 		{
 			audioRecUp();
@@ -206,9 +225,15 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		tvTime.setText(String.format("%02d:%02d:%02d", time / 3600, time / 60,
 				time % 60));
 		timerView.invalidate(time);
+		sendUpdateTimeMessage();
+	}
 
-		MainHandler.instance().sendEmptyMessageDelayed(
-				MainHandler.getIntKey(getClass().getName()), 1000);
+	private void sendUpdateTimeMessage()
+	{
+		Message msg = MainHandler.instance().obtainMessage(
+				MainHandler.getIntKey(getClass().getName()), INNER_UPDATE_TIME,
+				0);
+		MainHandler.instance().sendMessageDelayed(msg, 1000);
 	}
 
 	protected int getRecDuration()
@@ -233,10 +258,19 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		lineTime.setVisibility(View.VISIBLE);
 	};
 
+	private long clock;
+
 	@Override
 	public void onPostListener(DeliveredEntity postEntity)
 	{
-		updateTime();
+		if (postEntity.getInnerKey() == INNER_UPDATE_TIME)
+		{
+			updateTime();
+		} else if (postEntity.getInnerKey() == INNER_PICK_TIME)
+		{
+			clock = (Long) postEntity.getObj();
+			tvClock.setText(DateUtil.format(clock, DateUtil.FMT_YMDHM));
+		}
 	}
 
 	@Override

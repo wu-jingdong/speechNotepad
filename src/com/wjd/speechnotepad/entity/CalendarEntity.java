@@ -31,7 +31,7 @@ public class CalendarEntity
 
 	public int getMonth()
 	{
-		return DateUtil.getDay(timestamp);
+		return DateUtil.getMonth(timestamp);
 	}
 
 	public int getDay()
