@@ -23,7 +23,6 @@ import com.wjd.speechnotepad.handler.DeliveredEntity;
 import com.wjd.speechnotepad.handler.MainHandler;
 import com.wjd.speechnotepad.handler.PostListener;
 import com.wjd.speechnotepad.util.DateUtil;
-import com.wjd.speechnotepad.util.Loger;
 
 public class CalendarFragment extends BaseFragment implements OnClickListener,
 		PostListener

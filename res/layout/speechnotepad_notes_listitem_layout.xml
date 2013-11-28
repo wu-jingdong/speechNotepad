@@ -19,13 +19,12 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ic_audio_bg"
             android:clickable="false"
-            android:drawableLeft="@drawable/ic_audio"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:gravity="right|center_vertical"
             android:minWidth="96dp"
             android:text="3&apos;"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="16sp" />
 
         <TextView
