@@ -17,11 +17,13 @@ import android.widget.TextView;
 
 import com.wjd.speechnotepad.R;
 import com.wjd.speechnotepad.adapter.CalendarAdapter;
+import com.wjd.speechnotepad.database.NotepadDbWrapper;
 import com.wjd.speechnotepad.entity.CalendarEntity;
 import com.wjd.speechnotepad.handler.DeliveredEntity;
 import com.wjd.speechnotepad.handler.MainHandler;
 import com.wjd.speechnotepad.handler.PostListener;
 import com.wjd.speechnotepad.util.DateUtil;
+import com.wjd.speechnotepad.util.Loger;
 
 public class CalendarFragment extends BaseFragment implements OnClickListener,
 		PostListener
@@ -50,6 +52,8 @@ public class CalendarFragment extends BaseFragment implements OnClickListener,
 
 	private LinearLayout lineWeekTitle = null;
 
+	private List<Integer> days = new ArrayList<Integer>();
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
@@ -69,7 +73,7 @@ public class CalendarFragment extends BaseFragment implements OnClickListener,
 
 		gdCalendar = (GridView) view.findViewById(R.id.gd_calendar);
 		adapter = new CalendarAdapter(getActivity().getBaseContext(), cls,
-				curTime);
+				curTime, days);
 		gdCalendar.setAdapter(adapter);
 
 		MainHandler.instance().registListener(hashCode(), this,
@@ -113,6 +117,10 @@ public class CalendarFragment extends BaseFragment implements OnClickListener,
 					.setTimestamp(curTime + dayTime * (1 + i - range - curDay));
 			cls.add(calentity);
 		}
+		days.clear();
+		NotepadDbWrapper.getDays(days, getApp().db(),
+				String.valueOf(getMonthBeginTime()),
+				String.valueOf(getMonthEndTime()));
 	}
 
 	private String getCurMonthStr()
@@ -150,6 +158,31 @@ public class CalendarFragment extends BaseFragment implements OnClickListener,
 		int count = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		int curDay = cal.get(Calendar.DAY_OF_MONTH);
 		return curTime + dayTime * (count - curDay + 1);
+	}
+
+	private long getMonthBeginTime()
+	{
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		cal.setTimeInMillis(curTime);
+		int curDay = cal.get(Calendar.DAY_OF_MONTH);
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		int minute = cal.get(Calendar.MINUTE);
+		int second = cal.get(Calendar.SECOND);
+		return curTime - dayTime * (curDay - 1) - hour * 3600 * 1000 - minute
+				* 60 * 1000 - second * 1000;
+	}
+
+	private long getMonthEndTime()
+	{
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		cal.setTimeInMillis(curTime);
+		int curDay = cal.get(Calendar.DAY_OF_MONTH);
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		int minute = cal.get(Calendar.MINUTE);
+		int second = cal.get(Calendar.SECOND);
+		int monthDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		return curTime - hour * 3600 * 1000 - minute * 60 * 1000 - second
+				* 1000 + (monthDay - curDay + 1) * dayTime;
 	}
 
 	@Override

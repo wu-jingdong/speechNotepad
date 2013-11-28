@@ -23,13 +23,18 @@ public class DBHelper extends SQLiteOpenHelper
 	{
 		db.execSQL(String.format("drop table if exists %s",
 				NotepadDbWrapper.TABLE_NAME));
-		db.execSQL(String.format("create table notepad "
-				+ "(%s text primary key not null, %s text not null, "
-				+ "%s text, %s text, %s integer not null)",
-				NotepadDbWrapper.NOTE_ID, NotepadDbWrapper.NOTE_AUDIO_ROUTE,
-				NotepadDbWrapper.NOTE_PHOTO_ROUTE,
-				NotepadDbWrapper.NOTE_NOTICE_TIME,
-				NotepadDbWrapper.NOTE_DURATION));
+		db.execSQL(String
+				.format("create table notepad "
+						+ "(%s text primary key not null, %s text not null, "
+						+ "%s text, %s text, %s integer not null, "
+						+ "%s integer not null, %s integer not null, %s integer not null)",
+						NotepadDbWrapper.NOTE_ID,
+						NotepadDbWrapper.NOTE_AUDIO_ROUTE,
+						NotepadDbWrapper.NOTE_PHOTO_ROUTE,
+						NotepadDbWrapper.NOTE_NOTICE_TIME,
+						NotepadDbWrapper.NOTE_DURATION,
+						NotepadDbWrapper.NOTE_YEAR,
+						NotepadDbWrapper.NOTE_MONTH, NotepadDbWrapper.NOTE_DAY));
 	}
 
 	@Override

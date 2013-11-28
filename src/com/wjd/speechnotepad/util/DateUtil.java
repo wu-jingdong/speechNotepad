@@ -11,7 +11,7 @@ public class DateUtil
 
 	public static final String FMT_YMDHMS = "yyyy-MM-dd HH:mm:ss";
 
-	public static final String FMT_HMS = "hh:mm:ss";
+	public static final String FMT_HMS = "HH:mm:ss";
 
 	public static final String FMT_YMDHM = "yyyy-MM-dd HH:mm";
 

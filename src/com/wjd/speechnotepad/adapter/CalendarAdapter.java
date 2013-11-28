@@ -26,12 +26,15 @@ public class CalendarAdapter extends BaseAdapter
 
 	private int itemHeight = 0;
 
+	private List<Integer> days = null;
+
 	public CalendarAdapter(Context context, List<CalendarEntity> cls,
-			long curTime)
+			long curTime, List<Integer> days)
 	{
 		this.context = context;
 		this.cls = cls;
 		this.curmonth = DateUtil.getMonth(curTime);
+		this.days = days;
 	}
 
 	@Override
@@ -83,11 +86,16 @@ public class CalendarAdapter extends BaseAdapter
 		{
 			vh = (ViewHolder) convertView.getTag();
 		}
+		vh.imgIndicator.setVisibility(View.GONE);
 		vh.tvDayOfMonth.setText(String.valueOf(getItem(position).getDay()));
 		if (getItem(position).getMonth() == curmonth)
 		{
 			vh.tvDayOfMonth.setTextColor(context.getResources().getColor(
 					android.R.color.black));
+			if (days.contains(DateUtil.getDay(getItem(position).getTimestamp())))
+			{
+				vh.imgIndicator.setVisibility(View.VISIBLE);
+			}
 		} else
 		{
 			vh.tvDayOfMonth.setTextColor(context.getResources().getColor(
@@ -118,6 +126,7 @@ public class CalendarAdapter extends BaseAdapter
 		{
 			vh.tvLeft.setVisibility(View.VISIBLE);
 		}
+
 		return convertView;
 	}
 
