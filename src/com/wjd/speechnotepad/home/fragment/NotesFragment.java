@@ -15,8 +15,10 @@ import com.wjd.speechnotepad.R;
 import com.wjd.speechnotepad.adapter.NoteAdapter;
 import com.wjd.speechnotepad.database.NotepadDbWrapper;
 import com.wjd.speechnotepad.entity.NotepadEntity;
+import com.wjd.speechnotepad.util.AudioMsgUtil;
+import com.wjd.speechnotepad.util.FileUtil;
 
-public class NotesFragment extends BaseFragment
+public class NotesFragment extends BaseFragment implements OnItemClickListener
 {
 
 	public static NotesFragment newInstance()
@@ -44,15 +46,7 @@ public class NotesFragment extends BaseFragment
 		View view = LayoutInflater.from(getActivity().getBaseContext())
 				.inflate(R.layout.speechnotepad_notes_fragment_layout, null);
 		lstNotes = (ListView) view.findViewById(R.id.lst_note);
-		lstNotes.setOnItemClickListener(new OnItemClickListener()
-		{
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
-			{
-
-			}
-		});
+		lstNotes.setOnItemClickListener(this);
 		adapter = new NoteAdapter(getActivity().getBaseContext(), notes);
 		lstNotes.setAdapter(adapter);
 		return view;
@@ -71,5 +65,14 @@ public class NotesFragment extends BaseFragment
 	{
 		notes.clear();
 		super.onDestroy();
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id)
+	{
+		AudioMsgUtil.getInstance().startPlay(
+				FileUtil.newInstance().getFile(
+						adapter.getItem(position).getAudioRoute(), false));
 	}
 }

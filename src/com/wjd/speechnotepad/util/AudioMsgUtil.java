@@ -19,6 +19,8 @@ public class AudioMsgUtil
 
 	private static final int REC_SIZE = 8000;
 
+	private static AudioMsgUtil instance = null;
+
 	private AudioRecord recorder;
 
 	private int recSize = 0;
@@ -29,26 +31,37 @@ public class AudioMsgUtil
 
 	private Speex speex;
 
-	public AudioMsgUtil()
+	public synchronized static AudioMsgUtil getInstance()
+	{
+		if (null == instance)
+		{
+			instance = new AudioMsgUtil();
+		}
+		return instance;
+	}
+
+	private AudioMsgUtil()
 	{
 		speex = new Speex();
 		speex.init();
 		frameSize = speex.getFrameSize();
 	}
 
-	private byte[] lock = new byte[0];
-
 	public void release()
 	{
-		synchronized (lock)
+		stopRecord();
+		stopPlay();
+		if (null != speex)
 		{
 			speex.close();
 			speex = null;
 		}
 	}
 
+	private EncodeThread recordThread;
+
 	// record and encode --------------------------------
-	public void initRecorder()
+	private void initRecorder()
 	{
 		recSize = AudioRecord.getMinBufferSize(REC_SIZE,
 				AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
@@ -61,36 +74,39 @@ public class AudioMsgUtil
 
 	public boolean startRecord(File file)
 	{
-		if (null == recorder)
-		{
-			return false;
-		}
+		stopRecord();
+		initRecorder();
 		recorder.startRecording();
 		return startRecThread(file);
 	}
 
-	private void stopRecord()
+	public void stopRecord()
 	{
-		if (null == recorder)
+		if (null != recorder)
 		{
-			return;
+			recorder.release();
+			recorder = null;
 		}
-		recorder.release();
-		recorder = null;
+		if (null != recordThread)
+		{
+			recordThread.running = false;
+			recordThread = null;
+		}
 	}
 
 	private boolean startRecThread(File file)
 	{
-		EncodeThread ec = new EncodeThread();
+		recordThread = new EncodeThread();
 		try
 		{
-			ec.fos = new FileOutputStream(file);
+			recordThread.fos = new FileOutputStream(file);
+			recordThread.running = true;
 		} catch (FileNotFoundException e)
 		{
-			ec.fos = null;
+			recordThread.fos = null;
 			return false;
 		}
-		ec.start();
+		recordThread.start();
 		return true;
 	}
 
@@ -99,10 +115,12 @@ public class AudioMsgUtil
 
 		FileOutputStream fos = null;
 
+		boolean running = false;
+
 		@Override
 		public void run()
 		{
-			while (isRecording())
+			while (isRecording() && running)
 			{
 				doRecord();
 			}
@@ -129,16 +147,7 @@ public class AudioMsgUtil
 					System.arraycopy(buffer, i * frameSize, toEncode, 0,
 							frameSize);
 					byte[] encoded = new byte[38];
-					int eLen = 0;
-					synchronized (lock)
-					{
-						if (null == speex)
-						{
-							stopRecord();
-							return;
-						}
-						eLen = speex.encode(toEncode, encoded);
-					}
+					int eLen = speex.encode(toEncode, encoded);
 					writeFile(encoded, eLen);
 				}
 			}
@@ -186,7 +195,9 @@ public class AudioMsgUtil
 
 	private AudioTrack track;
 
-	public void initAudioTrack()
+	private DecodeThread playThread;
+
+	private void initAudioTrack()
 	{
 		int minBufferSize = AudioTrack.getMinBufferSize(REC_SIZE,
 				AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
@@ -197,26 +208,25 @@ public class AudioMsgUtil
 
 	public void startPlay(File file)
 	{
-		if (null == track)
-		{
-			return;
-		}
+		stopPlay();
+		initAudioTrack();
 		track.play();
 		startPlayThread(file);
 	}
 
 	private void startPlayThread(File file)
 	{
-		DecodeThread decode = new DecodeThread();
+		playThread = new DecodeThread();
 		try
 		{
-			decode.fis = new FileInputStream(file);
+			playThread.fis = new FileInputStream(file);
+			playThread.running = true;
 		} catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 			return;
 		}
-		decode.start();
+		playThread.start();
 	}
 
 	public void stopPlay()
@@ -226,6 +236,12 @@ public class AudioMsgUtil
 			track.release();
 			track = null;
 		}
+
+		if (null != playThread)
+		{
+			playThread.running = false;
+			playThread = null;
+		}
 	}
 
 	private class DecodeThread extends Thread
@@ -233,19 +249,20 @@ public class AudioMsgUtil
 
 		FileInputStream fis = null;
 
+		boolean running = false;
+
 		@Override
 		public void run()
 		{
 			doPlay();
 			closeFile();
-			stopPlay();
 		}
 
 		private void doPlay()
 		{
 			try
 			{
-				while (isPlaying())
+				while (isPlaying() && running)
 				{
 					int encLen = fis.read();
 					if (-1 == encLen)
@@ -259,16 +276,7 @@ public class AudioMsgUtil
 						break;
 					}
 					short[] lin = new short[frameSize];
-					int len = 0;
-					synchronized (lock)
-					{
-						if (null == speex)
-						{
-							stopPlay();
-							break;
-						}
-						len = speex.decode(encData, lin, encData.length);
-					}
+					int len = speex.decode(encData, lin, encData.length);
 					if (len == frameSize)
 					{
 						try
@@ -303,7 +311,7 @@ public class AudioMsgUtil
 		}
 	}
 
-	public boolean isPlaying()
+	private boolean isPlaying()
 	{
 		return null != track
 				&& track.getPlayState() == AudioTrack.PLAYSTATE_PLAYING;

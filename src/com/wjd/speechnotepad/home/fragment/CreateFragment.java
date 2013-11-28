@@ -126,21 +126,12 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 
 	private void doPlay()
 	{
-		if (TextUtils.isEmpty(tempAudioRecPath))
+		if (TextUtils.isEmpty(confirmPath))
 		{
 			return;
 		}
-		if (null == recPlay)
-		{
-			recPlay = new AudioMsgUtil();
-		}
-		if (recPlay.isPlaying())
-		{
-			return;
-		}
-		File file = FileUtil.newInstance().getFile(tempAudioRecPath, false);
-		recPlay.initAudioTrack();
-		recPlay.startPlay(file);
+		AudioMsgUtil.getInstance().startPlay(
+				FileUtil.newInstance().getFile(confirmPath, false));
 	}
 
 	@Override
@@ -160,11 +151,7 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 	protected void audioRecUp()
 	{
 		endRecTime = System.currentTimeMillis();
-		if (null != recPlay)
-		{
-			recPlay.release();
-			recPlay = null;
-		}
+		AudioMsgUtil.getInstance().stopRecord();
 		MainHandler.instance().removeMessages(
 				MainHandler.getIntKey(getClass().getName()));
 		audioRecupView();
@@ -185,21 +172,13 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		btnAudio.setText(getRecDuration() + "\'");
 	}
 
-	protected AudioMsgUtil recPlay;
 	private File tempAudioRecFile = null;
 	private long beginRecTime = 0;
 	private long endRecTime = 0;
 
 	protected void audioRecDown()
 	{
-		if (null != recPlay)
-		{
-			recPlay.release();
-			recPlay = null;
-		}
-		recPlay = new AudioMsgUtil();
-		recPlay.initRecorder();
-		recPlay.startRecord(initFile());
+		AudioMsgUtil.getInstance().startRecord(initFile());
 		beginRecTime = System.currentTimeMillis();
 		audioRecdownView();
 	}
@@ -277,5 +256,13 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 	public void updateView()
 	{
 
+	}
+
+	@Override
+	public void onDestroyView()
+	{
+		confirmPath = null;
+		clock = 0;
+		super.onDestroyView();
 	}
 }

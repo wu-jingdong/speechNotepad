@@ -9,11 +9,11 @@ import java.util.Locale;
 public class DateUtil
 {
 
-	public static final String FMT_YMDHMS = "yyyy-MM-dd hh:mm:ss";
+	public static final String FMT_YMDHMS = "yyyy-MM-dd HH:mm:ss";
 
 	public static final String FMT_HMS = "hh:mm:ss";
 
-	public static final String FMT_YMDHM = "yyyy-MM-dd hh:mm";
+	public static final String FMT_YMDHM = "yyyy-MM-dd HH:mm";
 
 	public static String format(String longTime, String format)
 	{
