@@ -23,6 +23,7 @@ import com.wjd.speechnotepad.handler.DeliveredEntity;
 import com.wjd.speechnotepad.handler.MainHandler;
 import com.wjd.speechnotepad.handler.PostListener;
 import com.wjd.speechnotepad.home.clock.ClockActivity;
+import com.wjd.speechnotepad.home.clock.SpeechClockActivity;
 import com.wjd.speechnotepad.util.AudioMsgUtil;
 import com.wjd.speechnotepad.util.DateUtil;
 import com.wjd.speechnotepad.util.FileUtil;
@@ -42,6 +43,8 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 	}
 
 	private Button btnAddClock;
+
+	private Button btnRecordClock;
 
 	private LinearLayout lineTime;
 
@@ -65,8 +68,10 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 				.inflate(R.layout.speechnotepad_create_fragment_layout, null);
 		btnAddClock = (Button) view.findViewById(R.id.btn_add_clock);
 		btnAddClock.setOnClickListener(this);
+		btnRecordClock = (Button) view.findViewById(R.id.btn_speech_add_clock);
+		btnRecordClock.setOnClickListener(this);
 		lineTime = (LinearLayout) view.findViewById(R.id.line_time);
-		lineTime.setVisibility(View.GONE);
+		lineTime.setVisibility(View.INVISIBLE);
 		timerView = (TimerView) view.findViewById(R.id.timer_view);
 		tvTime = (TextView) view.findViewById(R.id.tv_time);
 		btnPress2Speack = (Button) view.findViewById(R.id.btn_press_2_speak);
@@ -87,6 +92,9 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 	{
 		switch (v.getId())
 		{
+			case R.id.btn_speech_add_clock:
+				doRecordClock();
+				break;
 			case R.id.btn_add_clock:
 				doAddClock();
 				break;
@@ -99,6 +107,11 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 			default:
 				break;
 		}
+	}
+
+	private void doRecordClock()
+	{
+		SpeechClockActivity.actionLuanch(getActivity());
 	}
 
 	private void doAddClock()
@@ -227,7 +240,7 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 
 	protected void audioRecupView()
 	{
-		lineTime.setVisibility(View.GONE);
+		lineTime.setVisibility(View.INVISIBLE);
 	};
 
 	protected void audioRecdownView()
@@ -248,7 +261,8 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		} else if (postEntity.getInnerKey() == INNER_PICK_TIME)
 		{
 			clock = (Long) postEntity.getObj();
-			tvClock.setText(DateUtil.format(clock, DateUtil.FMT_YMDHM));
+			tvClock.setText(R.string.clock_time);
+			tvClock.append(DateUtil.format(clock, DateUtil.FMT_YMDHM));
 		}
 	}
 

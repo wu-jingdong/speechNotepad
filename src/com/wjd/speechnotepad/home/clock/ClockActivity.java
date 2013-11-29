@@ -34,7 +34,7 @@ public class ClockActivity extends BaseActivity implements OnClickListener
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.speechnotepad_home_clock_layout);
-		setSecondTitleBar(getString(R.string.add_clock));
+		setSecondTitleBar(getString(R.string.select_clock));
 		mDatePicker = (DatePicker) findViewById(R.id.datePicker1);
 		mTimePicker = (TimePicker) findViewById(R.id.timePicker1);
 		mTimePicker.setIs24HourView(true);
@@ -67,7 +67,7 @@ public class ClockActivity extends BaseActivity implements OnClickListener
 				.instance()
 				.obtainMessage(
 						MainHandler.getIntKey(CreateFragment.class.getName()),
-						2, 0, time).sendToTarget();
+						CreateFragment.INNER_PICK_TIME, 0, time).sendToTarget();
 		finish();
 	}
 
