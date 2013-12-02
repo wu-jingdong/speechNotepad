@@ -39,9 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_clock"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false" />
+            android:focusable="false" />
     </LinearLayout>
 
     <TextView
@@ -50,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:text="2012-08-09 12:32"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/darker_gray"
         android:textSize="16sp" />
 
 </LinearLayout>

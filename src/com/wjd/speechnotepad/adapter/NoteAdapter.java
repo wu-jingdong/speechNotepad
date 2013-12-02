@@ -6,6 +6,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -22,10 +23,14 @@ public class NoteAdapter extends BaseAdapter
 
 	private Context context = null;
 
-	public NoteAdapter(Context context, List<NotepadEntity> notes)
+	private OnClickListener click;
+
+	public NoteAdapter(Context context, List<NotepadEntity> notes,
+			OnClickListener click)
 	{
 		this.context = context;
 		this.notes = notes;
+		this.click = click;
 	}
 
 	@Override
@@ -67,11 +72,12 @@ public class NoteAdapter extends BaseAdapter
 		holder.btnAudio.setText(getItem(position).getDuration() + "\'");
 		holder.btnClock.setVisibility(TextUtils.isEmpty(getItem(position)
 				.getNoticeTime()) ? View.GONE : View.VISIBLE);
+		holder.btnClock.setTag(position);
+		holder.btnClock.setOnClickListener(click);
 		long time = Long.parseLong(getItem(position).getId());
-		holder.tvTime.setText(DateUtil
-				.format(getItem(position).getId(),
-						DateUtil.isToday(time) ? DateUtil.FMT_HMS
-								: DateUtil.FMT_YMDHMS));
+		holder.tvTime
+				.setText(DateUtil.format(getItem(position).getId(), DateUtil
+						.isToday(time) ? DateUtil.FMT_HMS : DateUtil.FMT_YMDHM));
 		return convertView;
 	}
 

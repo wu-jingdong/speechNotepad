@@ -56,6 +56,35 @@ public class NotepadDbWrapper
 		cursor = null;
 	}
 
+	public static void getDayNotes(List<NotepadEntity> notes, int year,
+			int month, int day, SQLiteDatabase db)
+	{
+		Cursor cursor = db.query(TABLE_NAME, null, NOTE_YEAR + " = ? and "
+				+ NOTE_MONTH + " =? and " + NOTE_DAY + "= ? ",
+				new String[] { String.valueOf(year), String.valueOf(month),
+						String.valueOf(day) }, null, null,
+				String.format("%s desc", NOTE_ID));
+		if (null == cursor)
+		{
+			return;
+		}
+		if (cursor.moveToFirst())
+		{
+			do
+			{
+				NotepadEntity note = new NotepadEntity();
+				note.setId(cursor.getString(0));
+				note.setAudioRoute(cursor.getString(1));
+				note.setPhotoRoute(cursor.getString(2));
+				note.setNoticeTime(cursor.getString(3));
+				note.setDuration(cursor.getInt(4));
+				notes.add(note);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		cursor = null;
+	}
+
 	public static void getDays(List<Integer> days, SQLiteDatabase db,
 			String beginTime, String endTime)
 	{

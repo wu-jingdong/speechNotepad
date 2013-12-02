@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fg_color"
+    android:orientation="vertical" >
+
+    <include layout="@layout/speechnotepad_include_second_title_layout" />
+
+    <ListView
+        android:id="@+id/lst_note"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@color/lst_cache_color"
+        android:divider="@drawable/ic_gray_point"
+        android:dividerHeight="1px"
+        android:listSelector="@drawable/trans_background" >
+    </ListView>
+
+</LinearLayout>

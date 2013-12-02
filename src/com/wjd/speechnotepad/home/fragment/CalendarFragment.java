@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.wjd.speechnotepad.R;
 import com.wjd.speechnotepad.adapter.CalendarAdapter;
@@ -22,10 +24,11 @@ import com.wjd.speechnotepad.entity.CalendarEntity;
 import com.wjd.speechnotepad.handler.DeliveredEntity;
 import com.wjd.speechnotepad.handler.MainHandler;
 import com.wjd.speechnotepad.handler.PostListener;
+import com.wjd.speechnotepad.home.day.DayNoteActivity;
 import com.wjd.speechnotepad.util.DateUtil;
 
 public class CalendarFragment extends BaseFragment implements OnClickListener,
-		PostListener
+		PostListener, OnItemClickListener
 {
 
 	public static CalendarFragment newInstance()
@@ -71,6 +74,7 @@ public class CalendarFragment extends BaseFragment implements OnClickListener,
 		lineWeekTitle = (LinearLayout) view.findViewById(R.id.line_week_title);
 
 		gdCalendar = (GridView) view.findViewById(R.id.gd_calendar);
+		gdCalendar.setOnItemClickListener(this);
 		adapter = new CalendarAdapter(getActivity().getBaseContext(), cls,
 				curTime, days);
 		gdCalendar.setAdapter(adapter);
@@ -190,6 +194,23 @@ public class CalendarFragment extends BaseFragment implements OnClickListener,
 		setTitleBar();
 		initCalendar();
 		adapter.notify(curTime);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id)
+	{
+		CalendarEntity ce = adapter.getItem(position);
+		if (ce.getMonth() != DateUtil.getMonth(System.currentTimeMillis()))
+		{
+			return;
+		}
+		Integer day = ce.getDay();
+		if (days.contains(day))
+		{
+			DayNoteActivity.actionLuanch(getActivity(),
+					String.valueOf(ce.getTimestamp()));
+		}
 	}
 
 	@Override
