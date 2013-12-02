@@ -56,7 +56,7 @@ public class AlarmActivity extends BaseActivity implements PostListener
 		}
 		setContentView(R.layout.speechnotepad_alarm_layout);
 		btnAudio = (Button) findViewById(R.id.btn_audio);
-		btnAudio.setText(String.valueOf(entity.getDuration()));
+		btnAudio.setText(entity.getDuration() + "\'");
 		btnAudio.setOnClickListener(new OnClickListener()
 		{
 			@Override

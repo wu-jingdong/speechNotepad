@@ -23,7 +23,6 @@
         android:background="@drawable/ic_audio_bg"
         android:gravity="right|center_vertical"
         android:minWidth="96dp"
-        android:textColor="@android:color/black"
-        android:visibility="visible" />
+        android:textColor="@android:color/black" />
 
 </LinearLayout>
