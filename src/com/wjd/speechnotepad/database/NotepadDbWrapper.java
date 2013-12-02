@@ -8,7 +8,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.wjd.speechnotepad.entity.NotepadEntity;
+import com.wjd.speechnotepad.home.clock.AlarmReceiver;
 import com.wjd.speechnotepad.util.DateUtil;
+import com.wjd.speechnotepad.util.Loger;
 
 public class NotepadDbWrapper
 {
@@ -83,6 +85,56 @@ public class NotepadDbWrapper
 		}
 		cursor.close();
 		cursor = null;
+	}
+
+	public static NotepadEntity getNearestNoticeTime(String curTime,
+			SQLiteDatabase db)
+	{
+		NotepadEntity note = null;
+		Cursor cursor = db.query(TABLE_NAME, null, NOTE_NOTICE_TIME + "> ?",
+				new String[] { curTime }, null, null,
+				String.format("%s asc", NOTE_NOTICE_TIME));
+		if (null == cursor)
+		{
+			return note;
+		}
+		if (cursor.moveToFirst())
+		{
+			note = new NotepadEntity();
+			note.setId(cursor.getString(0));
+			note.setAudioRoute(cursor.getString(1));
+			note.setPhotoRoute(cursor.getString(2));
+			note.setNoticeTime(cursor.getString(3));
+			note.setDuration(cursor.getInt(4));
+		}
+		cursor.close();
+		cursor = null;
+		return note;
+	}
+
+	public static NotepadEntity getNoticeById(String id, SQLiteDatabase db)
+	{
+		Loger.print(AlarmReceiver.class.getSimpleName(),
+				"alarm Id args -------------" + id, Loger.INFO);
+		NotepadEntity note = null;
+		Cursor cursor = db.query(TABLE_NAME, null, NOTE_ID + "=?",
+				new String[] { id }, null, null, null);
+		if (null == cursor)
+		{
+			return note;
+		}
+		if (cursor.moveToFirst())
+		{
+			note = new NotepadEntity();
+			note.setId(cursor.getString(0));
+			note.setAudioRoute(cursor.getString(1));
+			note.setPhotoRoute(cursor.getString(2));
+			note.setNoticeTime(cursor.getString(3));
+			note.setDuration(cursor.getInt(4));
+		}
+		cursor.close();
+		cursor = null;
+		return note;
 	}
 
 	public static void getDays(List<Integer> days, SQLiteDatabase db,

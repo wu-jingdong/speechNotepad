@@ -22,6 +22,7 @@ import com.wjd.speechnotepad.entity.NotepadEntity;
 import com.wjd.speechnotepad.handler.DeliveredEntity;
 import com.wjd.speechnotepad.handler.MainHandler;
 import com.wjd.speechnotepad.handler.PostListener;
+import com.wjd.speechnotepad.home.clock.AlarmReceiver;
 import com.wjd.speechnotepad.home.clock.ClockActivity;
 import com.wjd.speechnotepad.home.clock.SpeechClockActivity;
 import com.wjd.speechnotepad.util.AudioMsgUtil;
@@ -129,11 +130,15 @@ public class CreateFragment extends BaseFragment implements OnClickListener,
 		entity.setId(String.valueOf(System.currentTimeMillis()));
 		entity.setAudioRoute(confirmPath);
 		entity.setDuration(confirmTime);
-		if (clock > System.currentTimeMillis() + 60000)
+		if (clock > System.currentTimeMillis())
 		{
 			entity.setNoticeTime(String.valueOf(clock));
 		}
 		NotepadDbWrapper.insertNote(entity, getApp().db());
+		if (!TextUtils.isEmpty(entity.getNoticeTime()))
+		{
+			AlarmReceiver.addAlarm(getApp(), getActivity());
+		}
 		getParent().setCurPage(0);
 	}
 
