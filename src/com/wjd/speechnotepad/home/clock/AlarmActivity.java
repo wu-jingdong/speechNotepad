@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -81,14 +83,31 @@ public class AlarmActivity extends BaseActivity implements PostListener
 			}
 		});
 		regist();
-		playAlarm();
+		try
+		{
+			playAlarm();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
-	private void playAlarm()
+	private void playAlarm() throws Exception
 	{
 		stopAlarm();
-		player = MediaPlayer.create(getBaseContext(), R.raw.alarm);
+		player = new MediaPlayer();
+		player.setDataSource(this,
+				RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
+
+		player.setAudioStreamType(AudioManager.STREAM_ALARM);
+		// try
+		// {
+		player.prepare();
 		player.start();
+		// } catch (IllegalStateException e)
+		// {
+		// e.printStackTrace();
+		// }
 		Integer key = MainHandler.getIntKey(getClass().getName());
 		if (null != key)
 		{
