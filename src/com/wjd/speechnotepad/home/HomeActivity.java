@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 
+import com.wjd.speechnotepad.MainApp;
 import com.wjd.speechnotepad.R;
 import com.wjd.speechnotepad.home.fragment.NoteFragmentAdapter;
 import com.wjd.speechnotepad.pageIndicator.TitlePageIndicator;
@@ -45,7 +46,7 @@ public class HomeActivity extends FragmentActivity
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			// ((MainApp) getApplication()).recycle();
+			((MainApp) getApplication()).recycle();
 		}
 		return super.onKeyDown(keyCode, event);
 	}

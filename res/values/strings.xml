@@ -31,5 +31,6 @@
     <string name="record_clock">录制提醒时间</string>
     <string name="not_understand">没听明白,能重复下吗?</string>
     <string name="cur_clock">提醒时间：%1$s</string>
+    <string name="stop_alarm">停止闹钟</string>
 
 </resources>

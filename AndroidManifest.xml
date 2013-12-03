@@ -57,13 +57,14 @@
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.wjd.speechnotepad.home.clock.AlarmReceiver" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <activity
             android:name=".home.clock.AlarmActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Dialog" >
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" >
         </activity>
     </application>
 

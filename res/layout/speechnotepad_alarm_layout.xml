@@ -25,4 +25,15 @@
         android:minWidth="96dp"
         android:textColor="@android:color/black" />
 
+    <Button
+        android:id="@+id/btn_stop"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_background"
+        android:minWidth="200dp"
+        android:text="@string/stop_alarm"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
 </LinearLayout>

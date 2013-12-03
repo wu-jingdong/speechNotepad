@@ -1,11 +1,11 @@
 package com.wjd.speechnotepad.home.clock;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.telephony.TelephonyManager;
 
 import com.wjd.speechnotepad.MainApp;
 import com.wjd.speechnotepad.database.NotepadDbWrapper;
@@ -27,11 +27,21 @@ public class AlarmReceiver extends BroadcastReceiver
 			{
 				MainHandler.instance().sendEmptyMessage(key);
 			}
+			TelephonyManager tm = (TelephonyManager) context
+					.getSystemService(Context.TELEPHONY_SERVICE);
+			if (tm.getCallState() != TelephonyManager.CALL_STATE_IDLE)
+			{
+				addAlarm(MainApp.getApp(), context);
+				return;
+			}
 			AlarmActivity.actionLuanch(context, intent.getStringExtra("id"));
+		} else if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
+		{
+			addAlarm(MainApp.getApp(), context);
 		}
 	}
 
-	public static void addAlarm(MainApp app, Activity ac)
+	public static void addAlarm(MainApp app, Context ac)
 	{
 		NotepadEntity note = NotepadDbWrapper.getNearestNoticeTime(
 				String.valueOf(System.currentTimeMillis()), app.db());
@@ -44,8 +54,8 @@ public class AlarmReceiver extends BroadcastReceiver
 		Intent it = new Intent(AlarmReceiver.ACTION_ALARM);
 		Long time = Long.parseLong(note.getNoticeTime());
 		it.putExtra("id", note.getId());
-		PendingIntent pi = PendingIntent.getBroadcast(ac.getBaseContext(), 0,
-				it, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent pi = PendingIntent.getBroadcast(ac, 0, it,
+				PendingIntent.FLAG_CANCEL_CURRENT);
 		am.set(AlarmManager.RTC_WAKEUP, time, pi);
 	}
 }

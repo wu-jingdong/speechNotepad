@@ -1,10 +1,12 @@
 package com.wjd.speechnotepad.home.clock;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -41,6 +43,8 @@ public class AlarmActivity extends BaseActivity implements PostListener
 
 	private MediaPlayer player;
 
+	private PhoneStateReceiver receiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -62,11 +66,21 @@ public class AlarmActivity extends BaseActivity implements PostListener
 			@Override
 			public void onClick(View v)
 			{
+				stopAlarm();
 				AudioMsgUtil.getInstance().startPlay(
 						FileUtil.newInstance().getFile(entity.getAudioRoute(),
 								false));
 			}
 		});
+		findViewById(R.id.btn_stop).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				finish();
+			}
+		});
+		regist();
 		playAlarm();
 	}
 
@@ -74,16 +88,12 @@ public class AlarmActivity extends BaseActivity implements PostListener
 	{
 		stopAlarm();
 		player = MediaPlayer.create(getBaseContext(), R.raw.alarm);
-		player.setOnSeekCompleteListener(new OnSeekCompleteListener()
-		{
-
-			@Override
-			public void onSeekComplete(MediaPlayer mp)
-			{
-				finish();
-			}
-		});
 		player.start();
+		Integer key = MainHandler.getIntKey(getClass().getName());
+		if (null != key)
+		{
+			MainHandler.instance().sendEmptyMessageDelayed(key, 61000);
+		}
 	}
 
 	private void stopAlarm()
@@ -104,10 +114,45 @@ public class AlarmActivity extends BaseActivity implements PostListener
 	@Override
 	public void finish()
 	{
+		unRegist();
 		MainHandler.instance().unRegistListener(hashCode());
 		stopAlarm();
 		AudioMsgUtil.getInstance().stopPlay();
 		AlarmReceiver.addAlarm((MainApp) getApplication(), this);
 		super.finish();
+	}
+
+	private void regist()
+	{
+		receiver = new PhoneStateReceiver();
+		registerReceiver(receiver, new IntentFilter(
+				TelephonyManager.ACTION_PHONE_STATE_CHANGED));
+	}
+
+	private void unRegist()
+	{
+		if (null != receiver)
+		{
+			unregisterReceiver(receiver);
+			receiver = null;
+		}
+	}
+
+	class PhoneStateReceiver extends BroadcastReceiver
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			if (intent.getAction().equals(
+					TelephonyManager.ACTION_PHONE_STATE_CHANGED))
+			{
+				String state = intent
+						.getStringExtra(TelephonyManager.EXTRA_STATE);
+				if (!TelephonyManager.EXTRA_STATE_IDLE.equals(state))
+				{
+					finish();
+				}
+			}
+		}
 	}
 }

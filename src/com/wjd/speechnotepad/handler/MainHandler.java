@@ -61,6 +61,10 @@ public class MainHandler extends Handler
 	 */
 	public static Integer getIntKey(String className)
 	{
+		if (null == handler)
+		{
+			return null;
+		}
 		return handler.keyParser.get(className);
 	}
 
